@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 
 
-engine = create_engine("sqlite:///tasks.db", echo=True)
+engine = create_engine("sqlite:///posts.db", echo=True)
 Session = sessionmaker(bind=engine)
 
 
