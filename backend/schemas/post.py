@@ -8,3 +8,8 @@ class UserPostData(BaseModel):
     author: str
     content: str
     theme: str
+
+
+class DeleteUserPost(BaseModel):
+    user: str
+    post_id: int

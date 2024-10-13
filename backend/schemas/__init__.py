@@ -1,1 +1,2 @@
-from .post import UserPostData
+from .post import (UserPostData,
+                   DeleteUserPost)

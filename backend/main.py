@@ -1,3 +1,4 @@
+"""Init FastAPI app"""
 from fastapi import FastAPI
 
 
