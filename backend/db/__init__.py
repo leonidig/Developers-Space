@@ -18,5 +18,5 @@ def down():
 
 from .models import Post
 
-
+down()
 up()

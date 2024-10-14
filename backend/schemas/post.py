@@ -11,5 +11,8 @@ class UserPostData(BaseModel):
 
 
 class DeleteUserPost(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     user: str
     post_id: int
+
+    

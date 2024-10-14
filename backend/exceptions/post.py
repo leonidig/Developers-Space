@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 class PermissionDeniedForDeleteUserPost(HTTPException):
     def __init__(self, detail: str = "Permission Denied - Try Visit Another Page"):
-        super().__init__(status_code=400, detail=detail)
+        super().__init__(status_code=403, detail=detail)
 
 
 class UserPostNotFound(HTTPException):
@@ -14,5 +14,5 @@ class UserPostNotFound(HTTPException):
 
 
 class ConectionWithDataBaseError(HTTPException):
-    def __init__(self, status_code: int, detail: str = "Error runtime connection with database") -> None:
-        super().__init__(status_code=503, detail=detail)
+    def __init__(self, detail: str = "Error runtime connection with database") -> None:
+        super().__init__(status_code=500, detail=detail)
