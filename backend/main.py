@@ -1,13 +1,18 @@
-"""Init FastAPI app"""
 from fastapi import FastAPI
-from uvicorn import run as run_uvicorn
+import asyncio
+from hypercorn.config import Config
+from hypercorn.asyncio import serve
+
 
 
 app = FastAPI(debug=True)
+
+config = Config()
+config.bind = ["localhost:8080"]
 
 
 import routes
 
 
 def main() -> None:
-    run_uvicorn(app=app, host="0.0.0.0", port=8000)
+    asyncio.run(serve(app, config))

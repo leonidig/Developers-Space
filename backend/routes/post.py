@@ -1,17 +1,26 @@
-"""All actions with user posts - CRUD, filters , etcetera"""
+import logging
 from sqlalchemy import select
-
 from main import app
-from db import (Session,
-                Post
-)
-from schemas import (UserPostData,
-                     DeleteUserPost
-)
+from db import Session, Post
+from schemas import UserPostData, DeleteUserPost
 from exceptions import (PermissionDeniedForDeleteUserPost,
                         UserPostNotFound,
-                        ConectionWithDataBaseError
-)
+                        ConectionWithDataBaseError )
+
+
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger()
+
+
+def handle_database_exception(func):
+    """Wraper for handling error in database"""
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Database error: {e}")
+            raise
+    return wrapper
 
 
 @app.get("/")
@@ -20,6 +29,7 @@ def index():
 
 
 @app.post("/create_user_post", status_code=201)
+@handle_database_exception
 def create_user_post(data: UserPostData):
     """Create users post by schema UserPostData"""
     with Session.begin() as session:
@@ -29,53 +39,45 @@ def create_user_post(data: UserPostData):
 
 
 @app.get("/get_all_users_posts")
+@handle_database_exception
 def get_all_users_posts():
     """Get all users posts"""
-    try:
-        with Session.begin() as session:
-            posts = session.scalars(select(Post)).all()
-            posts = [UserPostData.model_validate(post) for post in posts]
-            return posts
-    except Exception as e:
-        raise ConectionWithDataBaseError()
+    with Session.begin() as session:
+        posts = session.scalars(select(Post)).all()
+        posts = [UserPostData.model_validate(post) for post in posts]
+        return posts
 
 
 @app.delete("/delete_user_post/{post_id}")
+@handle_database_exception
 def delete_user_post(data: DeleteUserPost):
     """Delete User Post"""
-    try:
-        with Session.begin() as session: 
-            post_to_delete = session.scalar(select(Post).where(Post.id == data.post_id))
-            if not post_to_delete:
-                raise UserPostNotFound()
-            elif post_to_delete.author != data.user:
-                raise PermissionDeniedForDeleteUserPost()
-            else:
-                session.delete(post_to_delete)
-    except Exception as e:
-        raise ConectionWithDataBaseError()
+    with Session.begin() as session:
+        post_to_delete = session.scalar(select(Post).where(Post.id == data.post_id))
+        if not post_to_delete:
+            raise UserPostNotFound()
+        elif post_to_delete.author != data.user:
+            raise PermissionDeniedForDeleteUserPost()
+        else:
+            session.delete(post_to_delete)
 
 
 @app.get("/user_post_info/{post_id}")
-def user_post_info(post_id):
-    try:
-        with Session.begin() as session:
-            selected_post = session.scalar(select(Post).where(Post.id == post_id))
-            if selected_post is None:
-                raise UserPostNotFound()
-            else:
-                selected_post = UserPostData.model_validate(selected_post)
-                return selected_post
-    except Exception as e:
-        raise ConectionWithDataBaseError()
+@handle_database_exception
+def user_post_info(post_id: int):
+    """Get user post information by post_id"""
+    with Session.begin() as session:
+        selected_post = session.scalar(select(Post).where(Post.id == post_id))
+        if selected_post is None:
+            raise UserPostNotFound()
+        return UserPostData.model_validate(selected_post)
 
 
 @app.get("/all_user_posts/{author}")
+@handle_database_exception
 def all_user_posts(author: str):
-    try: 
-        with Session.begin() as session:
-            all_user_posts = session.scalars(select(Post).where(Post.author == author)).all()
-            all_user_posts = [UserPostData.model_validate(post) for post in all_user_posts]
-            return all_user_posts
-    except Exception as e:
-        raise ConectionWithDataBaseError()
+    """Get all posts by a specific author"""
+    with Session.begin() as session:
+        all_user_posts = session.scalars(select(Post).where(Post.author == author)).all()
+        all_user_posts = [UserPostData.model_validate(post) for post in all_user_posts]
+        return all_user_posts
