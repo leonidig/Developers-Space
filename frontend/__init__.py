@@ -1,9 +1,10 @@
-from quart import Quart
+from os import getenv
+from flask import Flask
 
 
-app = Quart("frontend")
+SECRET_KEY = getenv("SECRET_KEY")
 
-app.secret_key = "dsjkdmsls"
+app = Flask("frontend")
+app.config['SECRET_KEY'] = SECRET_KEY
 
-
-
+from . import routes

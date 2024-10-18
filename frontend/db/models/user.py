@@ -1,21 +1,23 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.ext.asyncio import AsyncSession
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.future import select
 
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from flask_login import UserMixin
 from .. import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
-    email: Mapped[str]
     nickname: Mapped[str]
+    email: Mapped[str]
     password: Mapped[str]
 
 
-    def set_password(self, password: str):
-        self.password = generate_password_hash(password)
 
-    def check_password(self, password: str) -> bool:
-        return check_password_hash(self.password, password)
+    def is_active(self) -> bool:
+        return True
+    def is_authenticated(self) -> bool:
+        return True
+    def is_anonymous(self)->bool:
+        return False
+    def get_id(self)->str:
+        return f"{self.id}"

@@ -1,12 +1,16 @@
 import logging
-from sqlalchemy import select
-from main import app
-from db import Session, Post
-from schemas import UserPostData, DeleteUserPost
-from exceptions import (PermissionDeniedForDeleteUserPost,
-                        UserPostNotFound,
-                        ConectionWithDataBaseError )
 
+from sqlalchemy import select
+
+from ..db import (Session,
+                  Post)
+from ..exceptions import (PermissionDeniedForDeleteUserPost,
+                          UserPostNotFound,
+                          ConectionWithDataBaseError)
+from ..schemas import (UserPostData,
+                       DeleteUserPost)
+
+from .. import app
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger()
@@ -29,7 +33,7 @@ def index():
 
 
 @app.post("/create_user_post", status_code=201)
-@handle_database_exception
+# @handle_database_exception
 def create_user_post(data: UserPostData):
     """Create users post by schema UserPostData"""
     with Session.begin() as session:
@@ -39,7 +43,7 @@ def create_user_post(data: UserPostData):
 
 
 @app.get("/get_all_users_posts")
-@handle_database_exception
+# @handle_database_exception
 def get_all_users_posts():
     """Get all users posts"""
     with Session.begin() as session:

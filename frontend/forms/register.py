@@ -1,27 +1,20 @@
-from quart_wtf import QuartForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import (DataRequired,
-                                Email,
-                                EqualTo)
-from wtforms.widgets import PasswordInput
+from flask_wtf import FlaskForm
+from wtforms import (
+    EmailField,
+    StringField,
+    PasswordField,
+    SubmitField,
+)
+from wtforms.validators import (
+    DataRequired,
+    EqualTo,
+    Email,
+)
 
 
-class RegisterForm(QuartForm):
-    email = StringField(
-        'Email address',
-        validators=[
-            DataRequired('Please enter your email address'),
-            Email()
-        ]
-    )
+class RegisterForm(FlaskForm):
+    email = EmailField(validators=[DataRequired(), Email(),])
+    password = PasswordField(validators=[DataRequired(),])
+    password_confirm = PasswordField(validators=[DataRequired(), EqualTo("password")])
 
-    password = PasswordField(
-        'Password',
-        widget=PasswordInput(hide_value=False),
-        validators=[
-            DataRequired('Please enter your password'),
-            EqualTo('password_confirm', message='Passwords must match'),
-            
-        ]
-    )
-
+    submit = SubmitField("Register")
