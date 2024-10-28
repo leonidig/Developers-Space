@@ -1,0 +1,122 @@
+{% extends '__base.html' %}
+
+{% block title %}
+    Task-Mate
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        body {
+            background-color: #2C2C2C;
+            font-family: 'Roboto', sans-serif;
+            color: #FFF;
+        }
+
+        .task-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 40px;
+            gap: 20px;
+        }
+
+        .task-block {
+            background: linear-gradient(135deg, #556270, #FF6B6B);
+            padding: 20px;
+            margin: 10px;
+            width: calc(25% - 20px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-block:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .task-block::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .task-block:hover::before {
+            opacity: 1;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.5); 
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .card-title {
+            color: #FFF;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            color: #EEE;
+            font-size: 16px;
+        }
+
+        .icon {
+            font-size: 40px;
+            color: #FF6B6B;
+            margin-bottom: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF6B6B;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background-color: #FF4040;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if posts %}
+        <div class="task-container">
+            {% for post in posts %}
+                <div class="task-block">
+                    <a href="/post/{{ post.id }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="card-title">{{ post.author }}</h2>
+                                <h3 class="card-text">{{ post.content }}</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

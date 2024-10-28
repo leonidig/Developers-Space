@@ -20,4 +20,4 @@ def index():
         "posts": response.json()
     }
     nickname = email.split("@")[0]
-    return render_template("__base.html", **posts, nickname=nickname)
+    return render_template("index.html", **posts, nickname=nickname)

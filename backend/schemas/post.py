@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 class UserPostData(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    id: Optional[int]
+    id: Optional[int] = None
     author: str
     content: str
     theme: str
