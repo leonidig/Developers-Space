@@ -53,7 +53,7 @@ def get_all_users_posts():
 
 
 @app.delete("/delete_user_post/{post_id}")
-@handle_database_exception
+# @handle_database_exception
 def delete_user_post(data: DeleteUserPost):
     """Delete User Post"""
     with Session.begin() as session:
@@ -67,7 +67,7 @@ def delete_user_post(data: DeleteUserPost):
 
 
 @app.get("/user_post_info/{post_id}")
-@handle_database_exception
+# @handle_database_exception
 def user_post_info(post_id: int):
     """Get user post information by post_id"""
     with Session.begin() as session:

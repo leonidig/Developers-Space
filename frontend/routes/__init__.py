@@ -1,5 +1,8 @@
 from . import (default,
                login,
-               create
+               create,
+               delete,
+               info
                )
+
 from .request import APIClient

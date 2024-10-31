@@ -1,0 +1,21 @@
+{% extends '__base.html' %} 
+
+{% block title %}
+    Delete Task
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    
+{% endblock %}
+
+
+{% block content %}
+<div class="form-container">
+    <form action="{{ url_for('delete_post', post_id=post_id) }}" method="POST">
+        <h1>Are you sure?</h1>
+        <button type="submit" class="btn-yes" name="choice" value="yes">Yes</button>
+        <button type="submit" class="btn-no" name="choice" value="no">No</button>
+    </form>
+</div>
+{% endblock %}
