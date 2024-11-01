@@ -9,6 +9,7 @@ from ..exceptions import (PermissionDeniedForDeleteUserPost,
                           ConectionWithDataBaseError)
 from ..schemas import (UserPostData,
                        DeleteUserPost)
+from fastapi.responses import JSONResponse
 
 from .. import app
 
@@ -51,10 +52,16 @@ def get_all_users_posts():
         posts = [UserPostData.model_validate(post) for post in posts]
         return posts
 
+@app.exception_handler(PermissionDeniedForDeleteUserPost)
+async def permission_denied_exception_handler(request, exc: PermissionDeniedForDeleteUserPost):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
+
 
 @app.delete("/delete_user_post/{post_id}")
-# @handle_database_exception
-def delete_user_post(data: DeleteUserPost):
+async def delete_user_post(data: DeleteUserPost):
     """Delete User Post"""
     with Session.begin() as session:
         post_to_delete = session.scalar(select(Post).where(Post.id == data.post_id))
@@ -64,6 +71,7 @@ def delete_user_post(data: DeleteUserPost):
             raise PermissionDeniedForDeleteUserPost()
         else:
             session.delete(post_to_delete)
+            return {"message": "Post deleted successfully"}
 
 
 @app.get("/user_post_info/{post_id}")

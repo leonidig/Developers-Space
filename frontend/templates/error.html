@@ -1,0 +1,17 @@
+{% extends '__base.html' %} 
+
+{% block title %}
+    Eror
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    
+{% endblock %}
+
+
+{% block content %}
+    {{ message }}
+    <br><br>
+    <a href="/">Main Page</a>
+{% endblock %}

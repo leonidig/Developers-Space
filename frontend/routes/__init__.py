@@ -6,3 +6,4 @@ from . import (default,
                )
 
 from .request import APIClient
+from .delete import to_index

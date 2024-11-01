@@ -6,6 +6,7 @@ from flask import (render_template,
                    url_for)
 from flask_login import current_user, login_required
 from .. import app
+from .delete import to_index
 from .request import APIClient
 
 
@@ -28,12 +29,8 @@ def create_post():
         "content": request.form.get("content"),
         "theme": request.form.get("theme")
     }
-    print("!" * 80)
-    print(data)
     response = client.send_request(post, "/create_user_post", data=data)
     if response.status_code == 201:
-        return redirect(url_for("index"))
+        return to_index()
     else:
-        print("*" * 80)
-        print(f"Code - {response.status_code}\nText - {response.text}")
-        return redirect(url_for("index"))
+        return to_index()
