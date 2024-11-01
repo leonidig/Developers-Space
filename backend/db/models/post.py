@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Mapped
 from .. import Base
 
@@ -8,3 +9,4 @@ class Post(Base):
     author: Mapped[str]
     content: Mapped[str]
     theme: Mapped[str]
+    published_at: Mapped[datetime]

@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import getenv
 from requests import post
 from flask import (render_template,
@@ -27,7 +28,8 @@ def create_post():
     data = {
         "author": current_user.email,
         "content": request.form.get("content"),
-        "theme": request.form.get("theme")
+        "theme": request.form.get("theme"),
+        "published_at": datetime.now().isoformat(sep=" ", timespec='minutes')
     }
     response = client.send_request(post, "/create_user_post", data=data)
     if response.status_code == 201:
